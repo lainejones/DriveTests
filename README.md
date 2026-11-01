@@ -63,9 +63,11 @@ The output shows in its window, every log is saved in the drawer
 (`flysuite.log`, `amifsx.log`, `amidefrag.log`) and a requester at the end
 says how it went.
 
-**From a Shell:** the same, with the answers on the line:
+**From a Shell:** the same, with the answers on the line (the script runs
+from its own drawer):
 
-    Execute DriveTests/RunTests Work:tests Quick
+    CD Work:DriveTests
+    Execute RunTests Work:tests Quick
 
 or the tools one by one, read-only first:
 
@@ -118,6 +120,28 @@ Issues: here for the kit, RunTests and volunit;
 [DataFlyerSCSI](https://github.com/lainejones/DataFlyerSCSI) for flysuite;
 [AmiFSX](https://github.com/lainejones/AmiFSX) for AmiFSX;
 [AmiDefrag](https://github.com/ChuckyGang/AmiDefrag) for AmiDefrag.
+
+## Using it with Claude (or another AI agent)
+
+The tools run on the Amiga, but the reading and the fixing can be done with
+an AI. Two ways:
+
+- **claude.ai / Claude Desktop:** run flysuite with `LOG=`, then give Claude
+  the log (paste it, or attach the file) with the driver's source and ask
+  what failed and why. The log is one line per check with the command and
+  the expected/got values, which is what it needs; `flysuite.md` in the
+  drawer explains every check if it asks.
+- **Claude Code (or any coding agent) in the driver's repository:** clone
+  this repository next to it, or copy `CLAUDE.md` from here into the
+  driver's. It tells the agent what the tools are, in which order to run
+  them, where to put the log so it survives a crash, how to read a FAIL /
+  HANG / crash, and to reproduce before fixing. The agent still needs a way
+  to run things on an Amiga: a scriptable emulator (WinUAE with a
+  host-directory drive, Copperline), a remote harness on a real machine, or
+  you running it and pasting the log back.
+
+This is how flysuite was used on the DataFlyerSCSI driver: audit, test,
+reproduce each finding, fix, re-run the same test, then everything again.
 
 ## Source
 

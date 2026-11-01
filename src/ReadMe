@@ -49,9 +49,10 @@ and unit from it, then asks Quick or Full:
          again) and runs AmiFSX there
 The output shows in its window, every log is saved in the drawer
 (flysuite.log, amifsx.log, amidefrag.log), and a requester at the end
-says how it went. From a Shell the same: Execute RunTests, or
+says how it went. From a Shell the same, from inside this drawer:
+  CD Work:DriveTests
   Execute RunTests Work:tests Full
-with the answers given. The tools can also be run one by one (below).
+with the answers given (left out, it asks). The tools can also be run one by one (below).
 
 From a PC: these run on the Amiga, not on the PC. Get the drawer onto the
 Amiga whole (LhA on the Amiga keeps the executable bits; unpacked on a
@@ -150,6 +151,17 @@ C= close/reopen 1 in N ops, XREAD = a second handle for half the reads
 extended space must read as zeroes. On the first mismatch it dumps the
 last 1024 operations and keeps the expected content next to the file.
 Return code 0 passed, 10 failure. Same SEED = same run.
+
+
+With an AI
+----------
+Give Claude (claude.ai, or Claude Code in your driver's repository) the
+flysuite.log and your driver source and ask what failed and why: one line
+per check with the command and the expected/got values is what it needs,
+and flysuite.md explains every check. The repository
+github.com/lainejones/DriveTests has a CLAUDE.md for coding agents: what
+the tools are, the order to run them, where to put the log, how to read a
+FAIL, a HANG or a crash, and to reproduce before fixing.
 
 
 Reporting
