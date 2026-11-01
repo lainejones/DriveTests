@@ -31,7 +31,11 @@ In this drawer
   AmiDefrag       the block-map analyser (AmiDefrag.md) - version 0.3,
                   by John Hertell (director) and Claude Code (code);
                   the defrag engines are beta, the analyse mode is what
-                  you want here
+                  you want here. NOTE: in our tests (OS 3.2.3, FFS, a
+                  real A1200 and WinUAE) 0.3 printed its map in full and
+                  then REBOOTED the machine on exit. RunTests therefore
+                  skips it unless you add AMIDEFRAG; run it by hand on a
+                  machine with nothing unsaved. Reported upstream.
   RAD-FFS         a mountlist for a RAD: FFS volume, a harmless first
                   target for AmiFSX
   LICENSE         GPL-3.0 for flysuite and AmiFSX (github.com/lainejones)
@@ -43,10 +47,10 @@ Running it
 From Workbench: double-click RunTests. It asks for a SCRATCH drawer on
 the drive to test (a file requester), works out the drive's device driver
 and unit from it, then asks Quick or Full:
-  Quick  reads only, writes nothing: flysuite's conf/big/edge/audit and
-         the AmiDefrag analysis
+  Quick  reads only, writes nothing: flysuite's conf/big/edge/audit
   Full   also writes test files in that drawer (made, checked and deleted
          again) and runs AmiFSX there
+(the AmiDefrag analysis only with AMIDEFRAG on the Shell line - see above)
 The output shows in its window, every log is saved in the drawer
 (flysuite.log, amifsx.log, amidefrag.log), and a requester at the end
 says how it went. From a Shell the same, from inside this drawer:

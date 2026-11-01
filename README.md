@@ -55,9 +55,15 @@ drawer on the drive to test, works out the drive's device driver and unit
 from it (`volunit`), then asks Quick or Full:
 
 - **Quick** reads only and writes nothing: flysuite's conf/big/edge/audit
-  groups and the AmiDefrag analysis
+  groups
 - **Full** also writes test files in that drawer (made, checked and deleted
   again) and runs AmiFSX there
+
+The AmiDefrag analysis is **off by default** (`AMIDEFRAG` on the Shell line
+turns it on): in our tests on OS 3.2.3 - a real A1200 and WinUAE, FFS
+volumes - AmiDefrag 0.3 printed its block map in full and then rebooted the
+machine when it exited. It is still in the drawer for the map, which is
+good; run it by hand on a machine with nothing unsaved. Reported upstream.
 
 The output shows in its window, every log is saved in the drawer
 (`flysuite.log`, `amifsx.log`, `amidefrag.log`) and a requester at the end
@@ -74,6 +80,10 @@ BlueSCSI/ZuluSCSI) needs that id kept out of the probes, or the network
 driver and the test talk to it at once:
 
     Execute RunTests Work:tests Quick SKIPIDS=5
+
+Arguments: `DIR` (the scratch drawer), `Quick|Full`, `SKIPIDS=<id,id>`,
+`AMIDEFRAG` (also run the AmiDefrag analysis). Left out, the first two are
+asked for with requesters.
 
 or the tools one by one, read-only first:
 
