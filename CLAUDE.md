@@ -15,6 +15,11 @@ it, this is what you need to know.
   docs: github.com/lainejones/AmiFSX.
 - `AmiDefrag` (John Hertell, MIT) - block-map analyser for FFS/PFS3/SFS. Use
   its analyse mode (`AmiDefrag Vol: MAP`) only; the defrag engines are beta.
+- `devsoak` (Simon Dick, BSD 2-Clause) - destructive soak tester: overwrites
+  a range or a whole partition and checks content under concurrent load for
+  hours. Docs: `devsoak.md` in the drawer, github.com/sidick/devsoak.
+  `devsoak.quirks` must stay beside the binary. Never point it at anything
+  the person has not named as expendable.
 - `src/RunTests` - the AmigaDOS script behind the icon: picks a scratch
   drawer, `volunit` turns it into `DEVICE= UNIT=`, then runs the three.
 - `src/volunit.c` - prints the device driver and unit behind a drawer.
@@ -42,6 +47,12 @@ session:
    over an RDB, a partition or a mounted volume).
 3. `AmiFSX Scratch:fsxtest N=100000 P=5000 C=100 XREAD`
 4. `AmiDefrag Scratch: MAP WIDTH=72` and look for "unknown" blocks.
+5. Last, only on a partition the person said can be destroyed:
+   `devsoak Scratch: -d -t 30m -y` (partition mode: the partition's own
+   extent is the range, nothing outside it is written). A mounted volume
+   must be confirmed by typing its name, which a harness cannot do: use an
+   unmounted partition, or `-r START,LEN` on a unit with no volume. The
+   partition is scrap afterwards; reformat it.
 
 Put the LOG on a volume of a *different* driver than the one under test (or
 the emulator's host folder): flysuite closes the file after every line, so
@@ -81,5 +92,6 @@ not optional.
 
 If the tool itself is wrong (a check that cannot pass on a correct driver, a
 wrong expectation for a device class), open an issue on the DataFlyerSCSI
-repository with the log line and the driver, or on AmiFSX / AmiDefrag for
-those. Issues about RunTests, volunit or the drawer go here.
+repository with the log line and the driver, or on AmiFSX / AmiDefrag /
+sidick/devsoak for those. Issues about RunTests, volunit or the drawer go
+here.
