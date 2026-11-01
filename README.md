@@ -176,8 +176,9 @@ reproduce each finding, fix, re-run the same test, then everything again.
   [ChuckyGang/AmiDefrag](https://github.com/ChuckyGang/AmiDefrag). MIT,
   included as `LICENSE-AmiDefrag`. Thanks for a block-map analyser that
   reads FFS, PFS3 and SFS alike.
-- **luVWagn** - whose CSA Twelve Gauge driver work is the reason the kit
-  runs on any driver, not just ours.
+- **luVWagn** - whose re-engineered `csascsi.device` for the CSA Twelve
+  Gauge (another 53C80 card) was the first driver outside ours the kit was
+  tidied up for.
 
 ## Licence
 
