@@ -69,6 +69,12 @@ from its own drawer):
     CD Work:DriveTests
     Execute RunTests Work:tests Quick
 
+A SCSI bus with a network adapter on it (a DaynaPORT emulation on a
+BlueSCSI/ZuluSCSI) needs that id kept out of the probes, or the network
+driver and the test talk to it at once:
+
+    Execute RunTests Work:tests Quick SKIPIDS=5
+
 or the tools one by one, read-only first:
 
     flysuite DEVICE=yourscsi.device UNIT=0 TESTS=conf,big,edge,audit

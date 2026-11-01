@@ -52,7 +52,12 @@ The output shows in its window, every log is saved in the drawer
 says how it went. From a Shell the same, from inside this drawer:
   CD Work:DriveTests
   Execute RunTests Work:tests Full
-with the answers given (left out, it asks). The tools can also be run one by one (below).
+with the answers given (left out, it asks). A SCSI bus with a network
+adapter on it (a DaynaPORT emulation on a BlueSCSI/ZuluSCSI, say) needs
+that id kept out of the probes - flysuite's absent-id checks would send
+it INQUIRY and TEST UNIT READY while the network driver is using it:
+  Execute RunTests Work:tests Quick SKIPIDS=5
+(from the icon the script asks for no ids; use the Shell form then). The tools can also be run one by one (below).
 
 From a PC: these run on the Amiga, not on the PC. Get the drawer onto the
 Amiga whole (LhA on the Amiga keeps the executable bits; unpacked on a

@@ -1,8 +1,10 @@
 ; RunTests - DriveTests from an icon: pick a scratch drawer, pick Quick or
 ; Full, and the three tools run in turn with their logs in that drawer.
 ; Double-click RunTests (IconX runs this), or in a Shell:
-;   Execute RunTests [DIR] [Quick|Full]   (both asked for when left out)
-.KEY DIR,MODE
+;   Execute RunTests [DIR] [Quick|Full] [SKIPIDS=<id,id>]
+; (drawer and mode are asked for when left out; SKIPIDS names SCSI ids
+; flysuite must not touch - a network adapter on the bus, e.g. a DaynaPORT)
+.KEY DIR,MODE,SKIPIDS/K
 .BRA {
 .KET }
 FailAt 21
@@ -28,8 +30,15 @@ Set dt_dir `Type ENV:dt_dir`
 Set dt_dir ${dt_dir}
 
 volunit "${dt_dir}" VAR=dt_unit VOLVAR=dt_vol
+If "{SKIPIDS}" EQ ""
+  Set dt_skip ""
+Else
+  Set dt_skip "SKIPIDS={SKIPIDS}"
+EndIf
 If WARN
-  RequestChoice >NIL: "DriveTests" "${dt_dir} is not on a disk device (RAM:, a network share?).*NPick a drawer on the drive you want to test." "OK"
+  If "{MODE}" EQ ""
+    RequestChoice >NIL: "DriveTests" "${dt_dir} is not on a disk device (RAM:, a network share?).*NPick a drawer on the drive you want to test." "OK"
+  EndIf
   Quit 20
 EndIf
 
@@ -53,9 +62,9 @@ Echo "DriveTests: ${dt_unit}, scratch drawer ${dt_dir}"
 Echo "----------------------------------------------------------------"
 Echo "1/3  flysuite - the driver"
 If "${dt_mode}" EQ "1"
-  flysuite ${dt_unit} TESTS=all MINUTES=2 WRITEFILE="${dt_dir}" LOG="${dt_dir}/flysuite.log"
+  flysuite ${dt_unit} ${dt_skip} TESTS=all MINUTES=2 WRITEFILE="${dt_dir}" LOG="${dt_dir}/flysuite.log"
 Else
-  flysuite ${dt_unit} TESTS=conf,big,edge,audit LOG="${dt_dir}/flysuite.log"
+  flysuite ${dt_unit} ${dt_skip} TESTS=conf,big,edge,audit LOG="${dt_dir}/flysuite.log"
 EndIf
 Set dt_rc1 $RC
 Echo ""
@@ -80,8 +89,13 @@ Echo "flysuite rc ${dt_rc1}  (0 passed, 5 a FAIL, 10 a HANG)"
 Echo "AmiFSX   rc ${dt_rc2}  (0 passed, 10 a mismatch)"
 Echo "AmiDefrag rc ${dt_rc3}"
 Echo "Logs: ${dt_dir}/flysuite.log, amifsx.log, amidefrag.log"
-RequestChoice >NIL: "DriveTests" "Done.*N*Nflysuite rc ${dt_rc1}, AmiFSX rc ${dt_rc2}, AmiDefrag rc ${dt_rc3}*N(0 = passed)*N*NThe logs are in ${dt_dir}.*NPlease post flysuite.log with any report." "OK"
+; a requester only when the script asked its questions (icon use); from a
+; Shell with the answers on the line it just ends, so scripts can run it
+If "{MODE}" EQ ""
+  RequestChoice >NIL: "DriveTests" "Done.*N*Nflysuite rc ${dt_rc1}, AmiFSX rc ${dt_rc2}, AmiDefrag rc ${dt_rc3}*N(0 = passed)*N*NThe logs are in ${dt_dir}.*NPlease post flysuite.log with any report." "OK"
+EndIf
 UnSet dt_dir
 UnSet dt_unit
 UnSet dt_mode
 UnSet dt_vol
+UnSet dt_skip
