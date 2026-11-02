@@ -60,15 +60,9 @@ drawer on the drive to test, works out the drive's device driver and unit
 from it (`volunit`), then asks Quick or Full:
 
 - **Quick** reads only and writes nothing: flysuite's conf/big/edge/dma16/
-  latency/audit groups
+  latency/audit groups, then the AmiDefrag analysis
 - **Full** also writes test files in that drawer (made, checked and deleted
   again) and runs AmiFSX there
-
-The AmiDefrag analysis is **off by default** (`AMIDEFRAG` on the Shell line
-turns it on): in our tests on OS 3.2.3 - a real A1200 and WinUAE, FFS
-volumes - AmiDefrag 0.3 printed its block map in full and then rebooted the
-machine when it exited. It is still in the drawer for the map, which is
-good; run it by hand on a machine with nothing unsaved. Reported upstream.
 
 The output shows in its window, every log is saved in the drawer
 (`flysuite.log`, `amifsx.log`, `amidefrag.log`) and a requester at the end
@@ -86,19 +80,21 @@ driver and the test talk to it at once:
 
     Execute RunTests Work:tests Quick SKIPIDS=5
 
-Arguments: `DIR` (the scratch drawer), `Quick|Full`, `SKIPIDS=<id,id>`,
-`AMIDEFRAG` (also run the AmiDefrag analysis). Left out, the first two are
-asked for with requesters.
+Arguments: `DIR` (the scratch drawer), `Quick|Full`, `SKIPIDS=<id,id>`.
+Left out, the first two are asked for with requesters. (`AMIDEFRAG` from
+1.2 is still accepted; the analysis now always runs.)
 
 or the tools one by one, read-only first:
 
     flysuite DEVICE=yourscsi.device UNIT=0 TESTS=conf,big,edge,audit
     flysuite DEVICE=yourscsi.device UNIT=0 TESTS=all WRITEFILE=Scratch:t
     AmiFSX Scratch:fsxtest N=100000 P=5000 C=100 XREAD
-    AmiDefrag Scratch: MAP WIDTH=72
+    AmiDefrag DH1: MAP WIDTH=72
     devsoak Scratch: -d -t 30m -y
 
 `volunit Work:tests` prints the `DEVICE= UNIT=` pair for a drawer.
+AmiDefrag takes the DOS device name (`DH1:`), not the volume name;
+`AmiDefrag LIST` shows which is which.
 
 devsoak is the one RunTests never runs: it takes the partition's own extent
 as its range (nothing outside it is written), inhibits the file system,
@@ -183,7 +179,7 @@ reproduce each finding, fix, re-run the same test, then everything again.
 
 - `flysuite`: `tools/flysuite.c` in the DataFlyerSCSI repository
 - `AmiFSX`: the AmiFSX repository
-- `AmiDefrag`: ChuckyGang/AmiDefrag (release 0.3)
+- `AmiDefrag`: ChuckyGang/AmiDefrag (proto release 0.5, 1 Nov 2026)
 - `devsoak`: sidick/devsoak (release 1.1, with its `devsoak.quirks` and
   README as `devsoak.md`)
 - `volunit`, `RunTests`, `RAD-FFS`, the drawer's `ReadMe`: here (`src/`)
@@ -194,7 +190,7 @@ reproduce each finding, fix, re-run the same test, then everything again.
 - **AmiFSX** - Laine Jones's port of **fsx**, the file system exerciser by
   Avadis Tevanian Jr. (NeXT) and Apple, as carried on in FreeBSD, xfstests
   and LTP. GPL-3.0 for the port.
-- **AmiDefrag 0.3** - John Hertell (director) and Claude Code (code),
+- **AmiDefrag 0.5** - John Hertell (director) and Claude Code (code),
   [ChuckyGang/AmiDefrag](https://github.com/ChuckyGang/AmiDefrag). MIT,
   included as `LICENSE-AmiDefrag`. Thanks for a block-map analyser that
   reads FFS, PFS3 and SFS alike.

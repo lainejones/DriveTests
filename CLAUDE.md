@@ -14,7 +14,8 @@ it, this is what you need to know.
 - `AmiFSX` - fsx port, hammers one file through dos.library. Source and
   docs: github.com/lainejones/AmiFSX.
 - `AmiDefrag` (John Hertell, MIT) - block-map analyser for FFS/PFS3/SFS. Use
-  its analyse mode (`AmiDefrag Vol: MAP`) only; the defrag engines are beta.
+  its analyse mode (`AmiDefrag DH1: MAP`) only; the defrag engines are beta.
+  It takes the DOS device name, not the volume name (`AmiDefrag LIST`).
 - `devsoak` (Simon Dick, BSD 2-Clause) - destructive soak tester: overwrites
   a range or a whole partition and checks content under concurrent load for
   hours. Docs: `devsoak.md` in the drawer, github.com/sidick/devsoak.
@@ -22,7 +23,8 @@ it, this is what you need to know.
   the person has not named as expendable.
 - `src/RunTests` - the AmigaDOS script behind the icon: picks a scratch
   drawer, `volunit` turns it into `DEVICE= UNIT=`, then runs the three.
-- `src/volunit.c` - prints the device driver and unit behind a drawer.
+- `src/volunit.c` - prints the device driver and unit behind a drawer, and
+  gives RunTests its DOS device name for AmiDefrag.
 
 The tools run **on the Amiga** (real or emulated, OS 2.04+, 68000 for
 flysuite/AmiFSX). You cannot run them on the PC. Ways to drive them from a
@@ -46,7 +48,8 @@ session:
    Raw block writes need `RAWWRITE=first,count` (saved and restored; refused
    over an RDB, a partition or a mounted volume).
 3. `AmiFSX Scratch:fsxtest N=100000 P=5000 C=100 XREAD`
-4. `AmiDefrag Scratch: MAP WIDTH=72` and look for "unknown" blocks.
+4. `AmiDefrag DH1: MAP WIDTH=72` (Scratch:'s device) and look for "unknown"
+   blocks.
 5. Last, only on a partition the person said can be destroyed:
    `devsoak Scratch: -d -t 30m -y` (partition mode: the partition's own
    extent is the range, nothing outside it is written). A mounted volume
