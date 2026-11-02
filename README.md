@@ -94,7 +94,9 @@ or the tools one by one, read-only first:
 
 `volunit Work:tests` prints the `DEVICE= UNIT=` pair for a drawer.
 AmiDefrag takes the DOS device name (`DH1:`), not the volume name;
-`AmiDefrag LIST` shows which is which.
+`AmiDefrag LIST` shows which is which. On a drive over 4 GB flysuite reads
+above 4 GB with TD64, NSD and SCSI only: `CMD_READ`'s 32-bit offset can't
+reach there.
 
 devsoak is the one RunTests never runs: it takes the partition's own extent
 as its range (nothing outside it is written), inhibits the file system,
