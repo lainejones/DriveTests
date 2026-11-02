@@ -59,8 +59,8 @@ use for one that only exists on real hardware.
 drawer on the drive to test, works out the drive's device driver and unit
 from it (`volunit`), then asks Quick or Full:
 
-- **Quick** reads only and writes nothing: flysuite's conf/big/edge/audit
-  groups
+- **Quick** reads only and writes nothing: flysuite's conf/big/edge/dma16/
+  latency/audit groups
 - **Full** also writes test files in that drawer (made, checked and deleted
   again) and runs AmiFSX there
 
@@ -104,9 +104,11 @@ devsoak is the one RunTests never runs: it takes the partition's own extent
 as its range (nothing outside it is written), inhibits the file system,
 and overwrites every sector in it, with several tasks at once, for as long
 as you say (`-t 8h` for a real soak, `-w`/`-q` for more workers and deeper
-queues). A partition with a mounted volume on it has to be confirmed by
-typing the volume's name back; `-y` does not skip that. Reformat the
-partition afterwards. `devsoak.md` has every option; `devsoak.quirks`
+queues; give deeper queues a longer watchdog, `-W 60` for `-w 4 -q 4` on a
+slow drive, as its manual says). A `WATCHDOG` FAIL ends devsoak but leaves
+its worker tasks running: reboot straight after one. A partition with a
+mounted volume on it has to be confirmed by typing the volume's name back;
+`-y` does not skip that. Reformat the partition afterwards. `devsoak.md` has every option; `devsoak.quirks`
 (kept beside the binary) lists known driver-specific behaviour.
 
 Nothing writes unless you say so. flysuite's raw block writes need
